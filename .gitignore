@@ -169,3 +169,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+# Node.js modules
+node_modules/
+# Python cache
+*.pyc
+__pycache__/
+# MacOS system files
+.DS_Store
