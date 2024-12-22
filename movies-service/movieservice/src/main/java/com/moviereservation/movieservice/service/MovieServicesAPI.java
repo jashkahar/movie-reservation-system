@@ -21,5 +21,23 @@ public class MovieServicesAPI {
     public Movie addMovie(Movie movie) {
         return movieRepository.save(movie);
     }
-}
 
+    public List<Movie> searchMovies(String genre, String language, String keyword, Boolean nowshowing) {
+        if (genre != null) {
+            return movieRepository.findByGenre(genre);
+        } else if (language != null) {
+            return movieRepository.findByLanguage(language);
+        } else if (keyword != null) {
+            return movieRepository.findByTitleContaining(keyword);
+        } else if (nowshowing != null) {
+            return movieRepository.findByNowshowing(nowshowing);
+        } else {
+            return movieRepository.findAll();
+        }
+    }
+
+    public List<Movie> getNowShowingMovies() {
+        return movieRepository.findByNowshowing(true);
+    }
+
+}

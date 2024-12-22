@@ -16,8 +16,16 @@ public class MovieController {
     }
 
     @GetMapping
-    public List<Movie> getAllMovies() {
-        return movieService.getAllMovies();
+    public List<Movie> getAllOrSearchMovies(
+            @RequestParam(required = false) String genre,
+            @RequestParam(required = false) String language,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Boolean nowshowing) {
+        if (genre == null && language == null && keyword == null && nowshowing == null) {
+            return movieService.getAllMovies();
+        } else {
+            return movieService.searchMovies(genre, language, keyword, nowshowing);
+        }
     }
 
     @PostMapping

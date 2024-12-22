@@ -1,5 +1,7 @@
 package com.moviereservation.movieservice.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,4 +19,6 @@ public class Movie {
     private int duration;
     private String language;
     private String posterUrl;
+    private Boolean nowshowing; // Allow null values
+    private LocalDate releaseDate;
 }

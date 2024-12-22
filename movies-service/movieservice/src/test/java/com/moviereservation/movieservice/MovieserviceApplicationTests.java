@@ -8,6 +8,6 @@ class MovieserviceApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// ...existing code...
 	}
-
 }
