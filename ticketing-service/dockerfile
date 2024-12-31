@@ -3,22 +3,20 @@ FROM python:3.10-slim
 
 # Set the working directory in the container
 WORKDIR /app
-
-# Copy the requirements.txt file into the container
-COPY requirements.txt /app/
+COPY . .
 
 # Install dependencies
+# COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code into the container
-COPY . /app/
-
-# Expose the Flask port
-EXPOSE 5000
-
-# Set environment variables for Flask
-ENV FLASK_APP=run.py
-ENV FLASK_ENV=development
+# # Set environment variables for Flask
+ENV FLASK_APP=run.py:create_app
+ENV FLASK_ENV='production'
+ENV FLASK_DEBUG=1
+# ENV DATABASE_URL=postgresql://postgres:pass@123@moviereservationpostgresdb:5432/ticketing_service 
 
 # Command to run the Flask app
-CMD ["flask", "run", "--host=0.0.0.0"]
+
+# CMD ["flask", "run", "--host=0.0.0.0:8083"]
+CMD ["sh", "entrypoint.sh"]
+

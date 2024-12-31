@@ -1,19 +1,24 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from app.utils.database import db, migrate
 from app.routes.ticket_routes import ticket_routes
 from app.routes.payment_routes import payment_routes
 from app.models import Ticket, Payment  # Import models
 from flask import jsonify
 import os
+from config import LocalConfig, ProductionConfig
 from flask_cors import CORS
-
 
 def create_app():
     app = Flask(__name__)
     CORS(app)
-    app.config.from_object('config.Config')
+    environment = os.getenv('FLASK_ENV', 'local')
+    print(f"Running in {environment} environment")
+
+    # Load the appropriate config
+    if environment == 'production':
+        app.config.from_object(ProductionConfig)
+    else:
+        app.config.from_object(LocalConfig)
 
     # Initialize extensions
     db.init_app(app)

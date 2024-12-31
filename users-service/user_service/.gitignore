@@ -155,3 +155,5 @@ __pycache__/
 
 # MacOS system files
 .DS_Store
+
+.dockerignore

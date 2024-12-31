@@ -45,3 +45,5 @@ docker-compose.yml
 # Virtual environments
 venv/
 env/
+
+.dockerignore

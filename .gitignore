@@ -183,3 +183,15 @@ __pycache__/
 
 # Log files
 *.log
+
+/target/
+.gradle/
+*.jar
+*.war
+*.db
+migrations/
+
+# Ignore all migrations
+*/migrations/
+# Allow specific migration files
+!*/migrations/0001_initial.py

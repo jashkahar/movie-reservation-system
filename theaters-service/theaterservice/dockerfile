@@ -7,8 +7,5 @@ WORKDIR /app
 # Copy the application JAR file to the container
 COPY target/theaterservice-0.0.1-SNAPSHOT.jar theater-service.jar
 
-# Expose the application port (make sure it matches the port configured in the app)
-EXPOSE 8082
-
 # Define the command to run the application
 ENTRYPOINT ["java", "-jar", "theater-service.jar"]

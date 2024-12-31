@@ -1,0 +1,102 @@
+version: '3.9'
+
+services:
+  moviereservationpostgresdb:
+    build: 
+      context: .
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./alldatabases.sql:/docker-entrypoint-initdb.d/alldatabases.sql
+    container_name: moviereservationpostgresdb
+    networks:
+       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "psql -U postgres -d userdb -c 'SELECT 1 FROM accounts_users LIMIT 1;' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  
+  movies-service:
+    build:
+      context: ./movies-service/movieservice
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=pass@123
+    ports:
+      - "8080:8080"  # External:Internal Port
+    container_name: movies-service
+    depends_on:
+      moviereservationpostgresdb:
+          condition: service_healthy
+    networks:
+      - app-network
+
+  theaters-service:
+    build:
+      context: ./theaters-service/theaterservice
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=pass@123
+    ports:
+      - "8082:8082"
+    container_name: theater-service
+    depends_on:
+      moviereservationpostgresdb:
+          condition: service_healthy
+    networks:
+      - app-network
+      
+  seat-reservation-service:
+    build:
+      context: ./seat-reservation-service
+    depends_on:
+      moviereservationpostgresdb:
+          condition: service_healthy
+    networks:
+      - app-network
+    ports:
+      - "8081:8081"
+    container_name: seat-reservation-service
+
+  ticketing-service:
+    build:
+      context: ./ticketing-service
+    depends_on:
+      moviereservationpostgresdb:
+          condition: service_healthy
+    networks:
+      - app-network
+    ports:
+      - "8083:8083"
+    container_name: ticketing-service
+
+  user-service:
+    build:
+      context: ./users-service/user_service
+    environment:
+      - DJANGO_SETTINGS_MODULE=user_service.settings.production
+      - POSTGRES_DB=userdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pass@123
+      - POSTGRES_HOST=moviereservationpostgresdb
+      - POSTGRES_PORT=5432
+    depends_on:
+      moviereservationpostgresdb:
+          condition: service_healthy
+    networks:
+      - app-network
+    ports:
+      - "8084:8084"
+    container_name: user-service
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

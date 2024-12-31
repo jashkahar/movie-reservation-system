@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, AbstractUser
 
 
-class CustomUser(AbstractUser):
+class Users(AbstractUser):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=100, unique=True)
 
